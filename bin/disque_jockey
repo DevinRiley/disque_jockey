@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'disque_jockey'
+DisqueJockey.run!

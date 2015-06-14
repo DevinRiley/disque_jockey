@@ -1,0 +1,1 @@
+class FixtureWorker < DisqueJockey::Worker; end
