@@ -1,10 +1,13 @@
 module DisqueJockey
   class Configuration
-    attr_accessor :logger, :worker_groups, :log_path, :env
+
+    attr_accessor :logger, :worker_groups, :log_path, :env, :nodes
+
     def initialize
       # set defaults
-      @worker_groups = worker_groups_for_environment
-      @log_path = log_path_for_environment
+      @worker_groups = 2
+      @log_path = (env == 'test' ? 'spec/log' : 'log')
+      @nodes = ["127.0.0.1:7711"]
     end
 
     def env
@@ -13,15 +16,6 @@ module DisqueJockey
 
     def daemonize?
       env != 'development'
-    end
-
-    def log_path_for_environment
-      env == 'test' ? 'spec/log' : 'log'
-    end
-
-    # TODO: just read this from a config file
-    def worker_groups_for_environment
-      env == 'development' ? 2 : 4
     end
 
   end

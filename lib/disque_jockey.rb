@@ -4,6 +4,7 @@ require 'disque_jockey/logger'
 require 'disque_jockey/supervisor'
 require 'disque_jockey/worker'
 require 'disque_jockey/configuration'
+require 'disque_jockey/worker_pool'
 require 'disque_jockey/worker_group'
 require 'timeout'
 

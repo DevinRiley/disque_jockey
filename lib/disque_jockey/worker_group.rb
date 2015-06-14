@@ -75,7 +75,7 @@ module DisqueJockey
     # Here we actually get jobs to work on and hand them off to worker
     # instances.
     def fetch_job_and_work(worker_class)
-      broker = Broker.new
+      broker = Broker.new(DisqueJockey.configuration.nodes)
       loop do
         # this method blocks until a job is returned
         _, job_id, job = broker.fetch_message_from(worker_class.queue_name)

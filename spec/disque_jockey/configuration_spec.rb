@@ -9,11 +9,16 @@ describe DisqueJockey::Configuration do
     it { expect(subject.daemonize?).to eq false }
   end
 
-  it "defines a log path method" do
-    expect(DisqueJockey::Configuration.new).to respond_to(:log_path)
-    expect(DisqueJockey::Configuration.new).to respond_to(:log_path=)
-    config = DisqueJockey::Configuration.new
-    config.log_path = 'spec-path'
-    expect(config.log_path).to eq 'spec-path'
+  describe "provides configurable attributes" do
+    it { expect(subject).to respond_to(:log_path) }
+    it { expect(subject).to respond_to(:log_path=) }
+    it { expect(subject).to respond_to(:nodes) }
+    it { expect(subject).to respond_to(:nodes=) }
+    it { expect(subject).to respond_to(:worker_groups) }
+    it { expect(subject).to respond_to(:worker_groups=) }
+    it { expect(subject).to respond_to(:log_path) }
+    it { expect(subject).to respond_to(:log_path=) }
+    it { expect(subject).to respond_to(:env) }
+    it { expect(subject).to respond_to(:env=) }
   end
 end

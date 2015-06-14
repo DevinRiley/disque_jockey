@@ -29,13 +29,6 @@ module DisqueJockey
         subject.new(@worker_classes).work!
       end
 
-
-      it "gives workers jobs to perform" do
-        allow_any_instance_of(Broker).to receive(:fetch_message_from).and_return(['dummy', 'test_id', 'test job'])
-        expect_any_instance_of(SecondSpecWorker).to receive(:handle).at_least(:once)
-        subject.new(@worker_classes).work!
-      end
-
       describe "handling logic around jobs" do
 
         it "times out workers that take too long" do
