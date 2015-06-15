@@ -6,7 +6,6 @@ module DisqueJockey
 
     def initialize(worker_classes = [])
       @worker_classes = worker_classes # array of classes to instantiate in our group
-      @worker_pool = {} # initialize a hash for storing workers
     end
 
     def work!
