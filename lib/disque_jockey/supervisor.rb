@@ -32,6 +32,7 @@ module DisqueJockey
     end
 
     def self.spawn_worker_groups
+      raise NoWorkersFoundError, "No workers found! See README for instructions on loading workrers" if worker_classes.empty?
       DisqueJockey.configuration.worker_groups.times { spawn_worker_group }
     end
 
@@ -46,7 +47,7 @@ module DisqueJockey
       # DisqueJockey only exits if it receives a 
       # kill signal
       loop do
-        @dead_disque_jockeys.each do
+        @dead_worker_groups.each do
           child_pid = @dead_disque_jockeys.shift
           logger.error "Child worker group exited: #{child_pid}"
           child_pids.delete(child_pid)
@@ -57,7 +58,7 @@ module DisqueJockey
     end
 
     def self.trap_signals_in_parent
-      @dead_disque_jockeys = []
+      @dead_worker_groups = []
       %w(QUIT TERM INT ABRT CLD).each do |sig|
         trap(sig) do
           if sig == 'CLD'
@@ -66,7 +67,7 @@ module DisqueJockey
             # This needs to be reentrant, so we queue up dead child
             # processes to be handled in the run loop, rather than 
             # acting here
-            @dead_disque_jockeys << Process.wait
+            @dead_worker_groups << Process.wait
           else 
             begin
               child_pids.each { |pid| Process.kill(sig, pid) }

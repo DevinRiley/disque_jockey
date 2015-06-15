@@ -1,0 +1,1 @@
+class NoWorkersFoundError < StandardError; end

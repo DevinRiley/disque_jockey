@@ -28,23 +28,6 @@ module DisqueJockey
         end
         subject.new(@worker_classes).work!
       end
-
-      describe "handling logic around jobs" do
-
-        it "times out workers that take too long" do
-          allow_any_instance_of(Broker).to receive(:fetch_message_from).and_return(['dummy', 'test_id', 'test job'])
-          allow_any_instance_of(subject).to receive(:work_until_signal) { sleep(0.2) }
-          expect_any_instance_of(SlowWorker).to receive(:log_exception).at_least(:once)
-          subject.new([SlowWorker]).work!
-        end
-
-        xit "acknowledges jobs if they are processed without errors" do
-          allow_any_instance_of(subject).to receive(:work_until_signal) { sleep(0.1) }
-          allow_any_instance_of(Broker).to receive(:fetch_message_from).and_return(['dummy', 'test_id', 'test job'])
-          expect_any_instance_of(Broker).to receive(:acknowledge).with('test_id').at_least(:once)
-          subject.new([SecondSpecWorker]).work!
-        end
-      end
     end
 
   end

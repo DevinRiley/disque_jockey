@@ -18,12 +18,17 @@ describe DisqueJockey::Supervisor do
   end
 
   it "::spawn_worker_groups spawns as many worker groups as the config says" do
-    group = double("WorkerGroup", work!: true)
-    expect(DisqueJockey::WorkerGroup).to receive(:new).twice.and_return(group)
+    subject.instance_variable_set(:@worker_classes, ['something'])
     allow(Process).to receive(:fork).and_yield
     allow_any_instance_of(DisqueJockey::Configuration).to receive(:worker_groups).and_return 2
+    group = double("WorkerGroup", work!: true)
+    expect(DisqueJockey::WorkerGroup).to receive(:new).twice.and_return(group)
     expect(group).to receive(:work!).twice
     subject.send(:spawn_worker_groups)
+  end
+
+  it "::spawn_worker_groups raises an error if there are no worker classes" do
+    expect{subject.send(:spawn_worker_groups)}.to raise_error(NoWorkersFoundError)
   end
 
   it "::load_workers loads classes in a workers directory" do

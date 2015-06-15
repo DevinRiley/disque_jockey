@@ -1,4 +1,5 @@
 require 'disque_jockey/version'
+require 'disque_jockey/exceptions'
 require 'disque_jockey/broker'
 require 'disque_jockey/logger'
 require 'disque_jockey/supervisor'
