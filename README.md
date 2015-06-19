@@ -50,16 +50,14 @@ Your worker class must do two things:
 Lastly, you must place your worker in a directory named 'workers'
 
 ## Starting Disque Jockey
-Once your worker is written and placed in a workers directory,
-you can call `disque_jockey start` from the command line and it will
-start up your workers and begin delivering jobs to them.
+Once your worker is written and placed in a workers directory, you can call `disque_jockey start` from the command line and it will start up your workers and begin delivering jobs to them.
 
-To see all the command line options, use the help command
+To see all the command line options, use the help command:
 ```
 disque_jockey help start
 ```
 
-To start disque_jockey with the desired options
+To start disque_jockey with the desired options:
 ````
 disque_jockey start --env=production --daemonize=true --worker-groups=10  --nodes=127.0.0.1:7111,34.45.231.124:4242
 ````

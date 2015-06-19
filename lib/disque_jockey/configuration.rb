@@ -5,7 +5,7 @@ module DisqueJockey
 
     def initialize(options={})
       @env = options["env"] || ENV["DISQUE_JOCKEY_ENV"] || "development"
-      @worker_groups = options["worker_groups"] || 2
+      @worker_groups = (options["worker_groups"] || 2).to_i
       @log_path = options["log_path"] || log_path_default
       @nodes = parse_nodes(options["nodes"]) || ["127.0.0.1:7711"]
       @daemonize = options["daemonize"] || daemonize_default
