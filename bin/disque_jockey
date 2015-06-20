@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
 
+$:.unshift(File.expand_path("../../lib", __FILE__))
+
 require 'disque_jockey'
-DisqueJockey.run!
+DisqueJockey::CLI.start(ARGV)
