@@ -20,10 +20,10 @@ module DisqueJockey
   end
 
   def self.configure
-    yield(self.configuration)
+    yield(configuration)
   end
 
-  def self.run!(options)
+  def self.run!(options={})
     @configuration = DisqueJockey::Configuration.new(options)
 
     DisqueJockey::Supervisor.work!
