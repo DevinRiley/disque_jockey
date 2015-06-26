@@ -1,7 +1,7 @@
 require 'spec_helper'
 module DisqueJockey
   describe Broker do
-    # Note: You actually have to run a Disque server 
+    # Note: You actually have to run a Disque server
     # locally for these tests to pass
     before(:all) do
       begin
@@ -43,7 +43,18 @@ module DisqueJockey
       end
 
       it "raises an error for a bad job id" do
-        expect{@broker.acknowledge('bad_id')}.to raise_error(RuntimeError)
+        expect{ @broker.acknowledge('bad_id') }.to raise_error(RuntimeError)
+      end
+    end
+
+    describe "#publish" do
+      it "publishes a job to Disque" do
+        test_queue = 'publish_test_queue'
+        test_job = 'job'
+        @broker.publish(test_queue, test_job, 1000)
+        fetched = @client.fetch(from: ['publish_test_queue']).first
+        expect(fetched.first).to eq test_queue
+        expect(fetched.last).to eq test_job
       end
     end
 
