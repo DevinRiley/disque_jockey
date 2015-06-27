@@ -63,6 +63,26 @@ disque_jockey start --env=production --daemonize=true --worker-groups=10  --node
 ````
 
 Messages successfully handled by a worker (ie no exceptions raised from the handle method) will be acknowledged and removed from the queue.
+## Worker Configuration
+ DisqueJockey::Worker implements some class methods that help you configure your worker.  You call them the same way you call the `subscribe_to` method, at the top of your class.
+
+```ruby
+require 'disque_jockey'
+class HighlyConfiguredWorker < DisqueJockey::Worker
+  subscribe_to 'example-queue'
+  threads 7
+  fast_ack true
+  timeout 5
+  
+  def handle(job)
+    logger.info("Peforming job: #{job}")
+  end
+end
+```
+- *Fast Acknowledgements*: call ````fast_ack true```` to use FASTACKs (https://github.com/antirez/disque#fast-acknowledges) in disque to acknowledge your messages.  Please note that fast_ack will make it more likely you will process a job more than once in the event of a network partition.  fast_ack is false by default.
+- *Threads*: To devote more threads to your worker class use ````threads 5```` .  Threads are set to two by default and have a maximum value of 10.
+- *Timeout*: To set the number of seconds your worker will process a job until raising a TimeoutError, use ````timeout 45````.  Timeout is set to 30 seconds by default and has a maximum value of 3600 seconds (one hour).
+
 
 ##Roadmap:
 DisqueJockey is not a currently a production-ready system, and there are a number of goals for it that have not been met yet.

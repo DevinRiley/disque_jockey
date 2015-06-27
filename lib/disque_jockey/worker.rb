@@ -11,11 +11,16 @@ module DisqueJockey
     end
 
     class << self
-      attr_reader :queue_name, :thread_count, :timeout_seconds
+      attr_reader :queue_name, :thread_count, :timeout_seconds, :use_fast_ack
 
       # This worker class will subscribe to queue
       def subscribe_to(queue)
         @queue_name = queue
+      end
+
+      # whehter to use Disque fast acknowledgements
+      def fast_ack(value)
+        @use_fast_ack = !!value
       end
 
       # minimum number of worker instances of a given worker class.
@@ -36,6 +41,7 @@ module DisqueJockey
         # these are the defaults
         type.threads 2
         type.timeout 30
+        type.fast_ack false
         # register the new worker type so we can start giving it jobs
         Supervisor.register_worker(type)
       end

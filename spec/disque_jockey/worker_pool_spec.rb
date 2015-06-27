@@ -24,7 +24,13 @@ module DisqueJockey
 
     it "gives workers jobs to perform" do
       @mock_worker = double("Worker", handle: true)
-      @mock_worker_class = double("WorkerClass", thread_count: 1, new: @mock_worker, timeout_seconds: 1, queue_name: 'q')
+      @mock_worker_class = double(
+        "WorkerClass",
+        thread_count: 1,
+        new: @mock_worker,
+        timeout_seconds: 1,
+        queue_name: 'q',
+        use_fast_ack: false)
       worker_pool = WorkerPool.new(@mock_worker_class)
       expect(@mock_worker).to receive(:handle)
       worker_pool.work!
@@ -36,7 +42,14 @@ module DisqueJockey
     end
 
     it "acknowledges jobs if they are processed without errors" do
+      SecondSpecWorker.fast_ack(false)
       expect_any_instance_of(Broker).to receive(:acknowledge).with('test_id').at_least(:once)
+      WorkerPool.new(SecondSpecWorker).work!
+    end
+
+    it "fast_acknowledges jobs if the worker uses fast_ack" do
+      SecondSpecWorker.fast_ack(true)
+      expect_any_instance_of(Broker).to receive(:fast_acknowledge).with('test_id').at_least(:once)
       WorkerPool.new(SecondSpecWorker).work!
     end
 
