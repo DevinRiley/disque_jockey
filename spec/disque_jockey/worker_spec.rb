@@ -41,7 +41,7 @@ describe DisqueJockey::Worker do
   context "class methods"
   context "overrides" do
 
-    it "allows overrides for timeout, and thread_count" do
+    it "allows overrides for timeout, threads, and fast_ack" do
       # These traits are set in worker_shared_setup.rb
       expect(SecondSpecWorker.timeout_seconds).to be(1)
       expect(SecondSpecWorker.thread_count).to be(1)
