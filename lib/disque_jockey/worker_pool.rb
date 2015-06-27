@@ -37,7 +37,7 @@ module DisqueJockey
     def handle_job(worker, job, job_id)
       begin
         Timeout::timeout(@worker_class.timeout_seconds) { worker.handle(job) }
-        @broker.acknowledge(job_id)
+        @worker_class.use_fast_ack ? @broker.fast_acknowledge(job_id) : @broker.acknowledge(job_id)
       rescue StandardError => exception
         worker.log_exception(exception)
         # TODO: Need to implement retry logic
@@ -47,7 +47,7 @@ module DisqueJockey
     end
 
     def build_worker_pool
-      @worker_class.thread_count.times { @pool << @worker_class.new(Logger) }      
+      @worker_class.thread_count.times { @pool << @worker_class.new(Logger) }
     end
 
   end

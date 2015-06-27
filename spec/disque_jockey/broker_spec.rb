@@ -34,7 +34,7 @@ module DisqueJockey
     end
 
     describe '#acknowledge' do
-      it "returns removes job from queue and returns true if it succeeds" do
+      it "removes job from queue and returns true if it succeeds" do
         @client.call('DEBUG', 'FLUSHALL')
         job_id = @client.push('test_queue', 'test job', 1000)
         expect(@client.call('QLEN', 'test_queue')).to eq 1
@@ -55,6 +55,20 @@ module DisqueJockey
         fetched = @client.fetch(from: ['publish_test_queue']).first
         expect(fetched.first).to eq test_queue
         expect(fetched.last).to eq test_job
+      end
+    end
+
+    describe "#fast_acknowledge" do
+      it "raises an error for a bad job id" do
+        expect{@broker.fast_acknowledge('bad_id')}.to raise_error(RuntimeError)
+      end
+
+      it "acknowledges jobs" do
+        @client.call('DEBUG', 'FLUSHALL')
+        job_id = @client.push('test_queue', 'test job', 1000)
+        expect(@client.call('QLEN', 'test_queue')).to eq 1
+        expect(@broker.fast_acknowledge(job_id)).to eq true
+        expect(@client.call('QLEN', 'test_queue')).to eq 0
       end
     end
 
