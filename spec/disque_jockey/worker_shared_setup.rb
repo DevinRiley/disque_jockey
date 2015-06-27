@@ -6,9 +6,10 @@ shared_context "worker setup" do
       subscribe_to "test"
       def handle(job); end
     end
-    
+
     class SecondSpecWorker < DisqueJockey::Worker
       subscribe_to "other-test"
+      fast_ack true
       threads 1
       timeout 1
       def handle(job); end

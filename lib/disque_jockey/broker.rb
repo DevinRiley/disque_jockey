@@ -13,8 +13,16 @@ module DisqueJockey
 
     def acknowledge(job_id)
       response = @client.call('ACKJOB', job_id)
-      # If there is an error acking the job the Disque client 
-      # *returns* an error object but doesn't raise it, 
+      # If there is an error acking the job the Disque client
+      # *returns* an error object but doesn't raise it,
+      # so we raise it here ourselves.
+      response.is_a?(RuntimeError) ? raise(response) : true
+    end
+
+    def fast_acknowledge(job_id)
+      response = @client.call('FASTACK', job_id)
+      # If there is an error acking the job the Disque client
+      # *returns* an error object but doesn't raise it,
       # so we raise it here ourselves.
       response.is_a?(RuntimeError) ? raise(response) : true
     end

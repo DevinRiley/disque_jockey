@@ -1,7 +1,7 @@
 require 'spec_helper'
 module DisqueJockey
   describe Broker do
-    # Note: You actually have to run a Disque server 
+    # Note: You actually have to run a Disque server
     # locally for these tests to pass
     before(:all) do
       begin
@@ -34,7 +34,7 @@ module DisqueJockey
     end
 
     describe '#acknowledge' do
-      it "returns removes job from queue and returns true if it succeeds" do
+      it "removes job from queue and returns true if it succeeds" do
         @client.call('DEBUG', 'FLUSHALL')
         job_id = @client.push('test_queue', 'test job', 1000)
         expect(@client.call('QLEN', 'test_queue')).to eq 1
@@ -44,6 +44,20 @@ module DisqueJockey
 
       it "raises an error for a bad job id" do
         expect{@broker.acknowledge('bad_id')}.to raise_error(RuntimeError)
+      end
+    end
+
+    describe "#fast_acknowledge" do
+      it "raises an error for a bad job id" do
+        expect{@broker.fast_acknowledge('bad_id')}.to raise_error(RuntimeError)
+      end
+
+      it "acknowledges jobs" do
+        @client.call('DEBUG', 'FLUSHALL')
+        job_id = @client.push('test_queue', 'test job', 1000)
+        expect(@client.call('QLEN', 'test_queue')).to eq 1
+        expect(@broker.fast_acknowledge(job_id)).to eq true
+        expect(@client.call('QLEN', 'test_queue')).to eq 0
       end
     end
 
