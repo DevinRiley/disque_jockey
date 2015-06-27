@@ -21,6 +21,10 @@ module DisqueJockey
       raise_error_or_return_true(response)
     end
 
+    def publish(*args)
+      @client.push(*args)
+    end
+
     private
 
     # If there is an error acking the job the Disque client
@@ -29,5 +33,6 @@ module DisqueJockey
     def raise_error_or_return_true(response)
       response.is_a?(RuntimeError) ? raise(response) : true
     end
+
   end
 end
