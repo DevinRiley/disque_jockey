@@ -79,7 +79,7 @@ class HighlyConfiguredWorker < DisqueJockey::Worker
   end
 end
 ```
-- *Fast Acknowledgements*: call ````fast_ack true```` to use FASTACKs in disque to acknowledge your messages.  Please note that fast_ack will make it more likely you will process a job more than once in the event of a network partition.  fast_ack is false by default.
+- *Fast Acknowledgements*: call ````fast_ack true```` to use FASTACKs (https://github.com/antirez/disque#fast-acknowledges) in disque to acknowledge your messages.  Please note that fast_ack will make it more likely you will process a job more than once in the event of a network partition.  fast_ack is false by default.
 - *Threads*: To devote more threads to your worker class use ````threads 5```` .  Threads are set to two by default and have a maximum value of 10.
 - *Timeout*: To set the number of seconds your worker will process a job until raising a TimeoutError, use ````timeout 45````.  Timeout is set to 30 seconds by default and has a maximum value of 3600 seconds (one hour).
 
