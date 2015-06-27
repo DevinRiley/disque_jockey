@@ -51,6 +51,8 @@ Your worker class must do two things:
 
 Lastly, you must place your worker in a directory named 'workers'
 
+Here is a repo of example workers to use as a template: https://github.com/DevinRiley/disque_jockey_examples
+
 ## Starting Disque Jockey
 Once your worker is written and placed in a workers directory, you can call `disque_jockey start` from the command line and it will start up your workers and begin delivering jobs to them.
 
